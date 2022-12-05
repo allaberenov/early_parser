@@ -1,7 +1,7 @@
 S->S
 S->aB
 A->Ba
-A->a
+A->a|
 B->ABC
 B->b
 C->BA

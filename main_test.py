@@ -1,19 +1,18 @@
-from grammar import Grammar
-from early_algo import Algo
-import pytest
+from grammar import *
+from early_algo import *
+
+from unittest import *
 
 
-def get_data():
-    file = open('test/test1.txt', 'r')
-    grammar = Grammar()
-    for line in file:
-        grammar.add_rule(line)
-    return grammar
+class AlgoTests(TestCase):
 
+    def get_data(self):
+        file = open('test/test_1.txt', 'r')
+        grammar = Grammar()
+        for line in file:
+            grammar.add_rule(line)
+        return grammar
 
-def test_1():
-    assert Algo(get_data()).has_word('ababa') == False
+    def test_simple(self):
 
-
-def test_2():
-    assert Algo(get_data()).has_word('abb') == False
+        self.assertTrue(q.has_word("ab"))
