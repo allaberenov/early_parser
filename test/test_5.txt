@@ -1,0 +1,13 @@
+S->ABCDE
+S->
+A->keBCDE
+A->S
+B->EmC
+C->DAi
+E->rD
+C->
+D->
+E->
+B->
+D->i
+

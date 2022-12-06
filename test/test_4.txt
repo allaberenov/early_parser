@@ -1,0 +1,6 @@
+S->TS
+S->Tс
+T->FbT
+T->Fd
+F->
+F->a

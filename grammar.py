@@ -157,9 +157,7 @@ class Grammar:
         return self._start
 
     def input_init(self):
-        """! Input the grammar from stdin
-        !!! This method wasn't tested !!!
-        """
+        """! Input the grammar from stdin"""
         self._size = int(input())
         for i in range(self._size):
             rule = input()

@@ -1,0 +1,7 @@
+S->S V P O T
+S->T S V P O
+S->ayan
+V->went
+P->to
+O->moscow
+T->yesterday
