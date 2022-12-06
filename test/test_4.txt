@@ -1,5 +1,5 @@
 S->TS
-S->Tс
+S->Tc
 T->FbT
 T->Fd
 F->

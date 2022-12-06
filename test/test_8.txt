@@ -1,7 +1,10 @@
-S->S V P O T
-S->T S V P O
+S->S_V_P_O_T
+S->T_S_V_P_O
+S->S_V_P_OD
 S->ayan
 V->went
 P->to
-O->moscow
-T->yesterday
+O->moscowD
+T->yesterdayD
+D->
+D->.
