@@ -1,7 +1,7 @@
 from grammar import *
 
 
-class Algo:
+class Early_algo:
     _grammar = None
     _levels = []
 
@@ -18,7 +18,6 @@ class Algo:
         def __init__(self, rule: str, rule_pos: int, str_pos: int):
             """ The constructor of _State """
             self.rule = rule
-            hash(9)
             self.rule_pos = rule_pos
             self.str_pos = str_pos
 
@@ -37,12 +36,14 @@ class Algo:
                 k += 1
             return hash_
 
-    def _scan(self, it: _State, level_id: int, c: str) -> bool:
-        """ The scan method for a single state """
-        if len(it.rule) > it.rule_pos and it.rule[it.rule_pos] == c:
-            prev_sz = len(self._levels[level_id + 1])
+    def _scan(self, it: _State, level_id: int, letter: str) -> bool:
+        """ The scan method for a single state
+            state_previous_size - use to determine if rules of situation changed
+        """
+        if len(it.rule) > it.rule_pos and it.rule[it.rule_pos] == letter:
+            state_previous_size = len(self._levels[level_id + 1])
             self._levels[level_id + 1].add(self._State(it.rule, it.rule_pos + 1, it.str_pos))
-            return len(self._levels[level_id + 1]) != prev_sz
+            return len(self._levels[level_id + 1]) != state_previous_size
         return False
 
     def _predict(self, _it: _State, level_id: int) -> bool:
@@ -51,10 +52,10 @@ class Algo:
             if is_non_terminal(_it.rule[_it.rule_pos]):
                 non_term = _it.rule[_it.rule_pos]
                 new_states = [self._State(it, 3, level_id) for it in self._grammar if it[0] == non_term]
-                prev_sz = len(self._levels[level_id])
+                rules_in_situation = len(self._levels[level_id])
                 for state in new_states:
                     self._levels[level_id].add(state)
-                return len(self._levels[level_id]) != prev_sz
+                return len(self._levels[level_id]) != rules_in_situation
         return False
 
     def _complete(self, it: _State, level_id: int) -> bool:
@@ -72,10 +73,12 @@ class Algo:
             return len(self._levels[level_id]) != prev_sz
         return False
 
-    def scan(self, _id: int, s: str):
+    def scan(self, _id: int, letter: str):
         """ The main scan method """
+        changed = False
         for it in self._levels[_id]:
-            self._scan(it, _id, s[_id])
+            changed |= self._scan(it, _id, letter[_id])
+        return changed
 
     def predict(self, _id: int) -> bool:
         """ The main predict method """
@@ -94,10 +97,7 @@ class Algo:
         return changed
 
     def has_word(self, word: str) -> bool:
-        self._levels = [set() for _ in range(len(word) + 1)]
-        start_rule = '#->'
-        start_rule += self._grammar.get_start()
-        self._levels[0].add(self._State(start_rule, 3, 0))
+        self.init_levels(word)
         changed = True
         while changed:
             changed = self.complete(0)
@@ -108,8 +108,16 @@ class Algo:
             while changed:
                 changed = self.complete(_id + 1)
                 changed |= self.predict(_id + 1)
-        result = self._State(start_rule, 4, 0)
+        result = self._State('#->S', 4, 0)
         for state in self._levels[len(word)]:
             if state == result:
                 return True
         return False
+
+    def start_rule(self):
+        start_rule = '#->S'
+        self._levels[0].add(self._State(start_rule, 3, 0))
+
+    def init_levels(self, word: str):
+        self._levels = [set() for _ in range(len(word) + 1)]
+        self.start_rule()

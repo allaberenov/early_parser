@@ -1,4 +1,4 @@
-CONST_CHAR_ID = 26
+CONST_CHAR_ID = 30
 
 
 def analyze_rules(rule: str) -> list:
@@ -45,7 +45,7 @@ class Grammar:
 
         def is_valid(self):
             return self._max_char_id > self.char_id >= 0 and \
-                0 <= self.rule_id < len(self.rules[self.char_id])
+                   0 <= self.rule_id < len(self.rules[self.char_id])
 
         def __init__(self, rules, c='A'):
             self.char_id = ord(c) - ord('A')
@@ -53,9 +53,11 @@ class Grammar:
             self.rules = rules
 
         def __iter__(self):
+            """redefining iterator inside rules"""
             return self
 
         def __next__(self):
+            """redefining next method"""
             self.rule_id += 1
             if self.rule_id >= len(self.rules[self.char_id]):
                 self.rule_id = 0
@@ -72,14 +74,8 @@ class Grammar:
         self._size = 0
         self._iter = self.__iter__
 
-    def get_start(self):
-        return self._start
-
-    def input_init(self):
-        self._size = int(input())
-        for i in range(self._size):
-            rule = input()
-            self.add_rule(rule)
+    def get_rule(self):
+        return self._rules
 
     def add_rule(self, rule: str) -> bool:
         if is_valid_rule(rule):
@@ -90,35 +86,6 @@ class Grammar:
             return True
         return False
 
-    def __len__(self, c: str = '') -> int:
-        if c == '':
-            return self._size
-        else:
-            if is_non_terminal(c):
-                return len(self._rules[ord(c) - ord('A')])
-        return 0
-
     def __iter__(self):
         self._iter = self._Iterator(self._rules)
         return self._iter.__iter__()
-
-    def __str__(self):
-        sz = self._size
-        output = str(sz) + '\n'
-        iterator = self._Iterator(self._rules)
-        for i in range(sz):
-            if i + 1 != sz:
-                output = output + next(iterator) + '\n'
-            else:
-                output = output + next(iterator)
-        return output
-
-    def __repr__(self):
-        output = str(self._size) + '\n'
-        iterator = self._Iterator(self._rules)
-        for i in range(self._size):
-            if i + 1 != self._size:
-                output = output + iterator.get_rule() + '\n'
-            else:
-                output = output + iterator.get_rule()
-        return output
